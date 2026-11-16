@@ -1,0 +1,174 @@
+
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Страница диспетчера</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            padding: 30px;
+        }
+
+        h1, h2 {
+            color: #333;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+        }
+
+        .order {
+            background: white;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px #ccc;
+        }
+
+        select, button {
+            padding: 10px;
+            margin-top: 10px;
+        }
+
+        select {
+            width: 250px;
+        }
+
+        button {
+            background: #218838;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #176b2c;
+        }
+
+        .empty {
+            color: gray;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Панель диспетчера</h1>
+
+    <h2>Новые заказы</h2>
+
+    {% for order in new_orders %}
+
+        <div class="order">
+
+            <h3>Заказ №{{ order.id }}</h3>
+
+            <p>
+                <b>Название:</b>
+                {{ order.name_order }}
+            </p>
+
+            <p>
+                <b>Цена:</b>
+                {{ order.price }} сом
+            </p>
+
+            <p>
+                <b>Адрес доставки:</b>
+                {{ order.delivery_address }}
+            </p>
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+                <input
+                    type="hidden"
+                    name="order_id"
+                    value="{{ order.id }}"
+                >
+
+                <input
+                    type="hidden"
+                    name="dispatcher_id"
+                    value="1"
+                >
+
+                <label>Выберите водителя:</label>
+
+                <br>
+
+                <select name="driver_id">
+
+                    <option value="">
+                        Назначить только на себя
+                    </option>
+
+                    {% for driver in drivers %}
+
+                        <option value="{{ driver.id }}">
+                            {{ driver.name_driver }}
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+                <br>
+
+                <button type="submit">
+                    Назначить заказ
+                </button>
+
+            </form>
+
+        </div>
+
+    {% empty %}
+
+        <p class="empty">
+            Новых заказов пока нет.
+        </p>
+
+    {% endfor %}
+
+
+    <h2>Свободные водители</h2>
+
+    {% for driver in drivers %}
+
+        <div class="order">
+
+            <p>
+                <b>Водитель:</b>
+                {{ driver.name_driver }}
+            </p>
+
+            <p>
+                <b>ID:</b>
+                {{ driver.id }}
+            </p>
+
+        </div>
+
+    {% empty %}
+
+        <p class="empty">
+            Свободных водителей нет.
+        </p>
+
+    {% endfor %}
+
+</div>
+
+</body>
+</html>

@@ -16,7 +16,26 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from cargo.views import driver_list, dispatcher_detail, driver_detail, dispatcher_list
+from cargo.views import client_list, client_detail
+from cargo.views import order_list, order_detail, order_create, operators_page
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+
+    path('drivers/', driver_list, name='driver_list'),
+    path('drivers/<int:pk>/', driver_detail, name='driver_detail'),
+
+    path('dispatchers/', dispatcher_list, name='dispatcher_list'),
+    path('dispatchers/<int:pk>/', dispatcher_detail, name='dispatcher_detail'),
+
+    path('clients/', client_list, name='client_list'),
+    path('clients/<int:pk>/', client_detail, name='client_detail'),
+
+    path('orders/', order_list, name='order_list'),
+    path('orders/<int:pk>/', order_detail, name='order_detail'),
+    path('orders/new/', order_create, name='order_create'),
+    path('operators/', operators_page, name='operators_page'),
+    
 ]
