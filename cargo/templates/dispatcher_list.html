@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Список диспетчеров</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+    <style>
+        :root {
+            --primary-gradient-start: #4e54c8;
+            --primary-gradient-end: #8f2bcf;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --text-dark: #1a1a2e;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--text-dark);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        .hero-section {
+            text-align: center;
+            padding: 4rem 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .hero-title {
+            font-weight: 700;
+            letter-spacing: -0.03rem;
+            background: linear-gradient(to right, var(--primary-gradient-start), var(--primary-gradient-end));
+            -webkit-text-fill-color: transparent;
+            
+        }
+
+        .dispatcher-card {
+            border: none;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+            height: 100%;
+            background: var(--card-bg);
+        }
+
+        .dispatcher-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(78, 84, 200, 0.2);
+        }
+
+        .card-header-gradient {
+            height: 6px;
+            background: linear-gradient(90deg, var(--primary-gradient-start), var(--primary-gradient-end));
+        }
+
+        .status-badge {
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+        }
+
+        .btn-primary-custom {
+            background: linear-gradient(135deg, var(--primary-gradient-start), var(--primary-gradient-end));
+            border: none;
+            padding: 0.4rem 1.2rem;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .btn-primary-custom:hover {
+            opacity: 0.9;
+            transform: scale(1.02);
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="hero-section">
+    <h1 class="hero-title display-3">Диспетчеры</h1>
+    <p class="lead text-muted">Единая панель управления и мониторинга диспетчеров системы</p>
+</div>
+
+<div class="container">
+    {% if dispatchers %}
+    <div class="row g-4">
+        {% for dispatcher in dispatchers %}
+        <div class="col-md-6 col-lg-4">
+            <div class="dispatcher-card">
+                <div class="card-header-gradient"></div>
+                <div class="p-4">
+                    <div class="d-flex align-items-start mb-3">
+                        <div class="bg-light rounded-circle p-3 me-3 d-flex align-items-center justify-content-center" style="width: 56px; height: 56px;">
+                            <i class="bi bi-person-fill fs-4 text-primary"></i>
+                        </div>
+                        <div>
+                            <h5 class="mb-1 fw-bold">{{ dispatcher.name_dispatcher }}</h5>
+                            {% if dispatcher.email %}
+                            <small class="text-muted">{{ dispatcher.email }}</small>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    {% if dispatcher.phone %}
+                    <div class="mb-3">
+                        <span class="text-secondary small"><i class="bi bi-telephone me-2"></i>{{ dispatcher.phone }}</span>
+                    </div>
+                    {% endif %}
+
+                    <hr class="my-3 border-top-0 border-bottom border-secondary-subtle opacity-25">
+
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        {% if dispatcher.status %}
+                        <span class="status-badge bg-light border {{ dispatcher.status|default:'secondary' }}">
+                            {{ dispatcher.get_status_display|default:dispatcher.status }}
+                        </span>
+                        {% else %}
+                        <span class="status-badge bg-secondary text-white">Статус не указан</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="d-grid">
+                        <a href="{% url 'dispatcher_detail' dispatcher.pk %}" class="btn btn-primary-custom text-white">
+                            Подробнее <i class="bi bi-arrow-right ms-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <div class="bg-white p-4 rounded-3 shadow-sm d-inline-block">
+            <i class="bi bi-inbox display-1 text-muted mb-3"></i>
+            <h3 class="fw-bold">Список пуст</h3>
+            <p class="text-muted">На данный момент в системе нет зарегистрированных диспетчеров.</p>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Bootstrap JS bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

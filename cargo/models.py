@@ -21,9 +21,9 @@ class Order(models.Model):
     delivery_address = models.CharField()
     creation_date = models.DateTimeField()
     finish_date = models.DateTimeField()
-    driver = models.ForeignKey(Driver, related_name= 'Orders', on_delete= models.SET_NULL, null= True)
-    dispatcher = models.ForeignKey(Dispatcher, related_name= 'Orders', on_delete= models.SET_NULL, null= True)
-    client = models.ForeignKey(Client, related_name= "Orders", on_delete= models.SET_NULL, null= True)
+    driver = models.ForeignKey(Driver, related_name= 'Orders', on_delete= models.SET_NULL, null= True, blank=True)
+    dispatcher = models.ForeignKey(Dispatcher, related_name= 'Orders', on_delete= models.SET_NULL, null= True, blank=True)
+    client = models.ForeignKey(Client, related_name= "Orders", on_delete= models.SET_NULL, null= True, blank=True)
      
 
 # Create your models here.

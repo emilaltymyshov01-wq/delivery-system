@@ -54,14 +54,20 @@ def order_create(request):
 
        
         if not name_order or not price or not delivery_address:
-            return render(request, 'logistic/order_form.html', {
+            return render(request, 'order_form.html', {
                 'error': 'Заполните обязательные поля: название, цена, адрес.',
             })
 
         try:
             price = int(price)
+            
+            if price < 0:
+                return render(request, 'order_form.html', {
+                    'error': 'Цена не может быть отрицательной.',
+                })
+                
         except ValueError:
-            return render(request, 'logistic/order_form.html', {
+            return render(request, 'order_form.html', {
                 'error': 'Цена должна быть числом.',
             })
 
@@ -75,9 +81,7 @@ def order_create(request):
         return redirect('order_detail', pk=order.pk)
 
 
-    return render(request, 'order_form.html', {
-        
-    })
+    return render(request, 'order_form.html')
 
 
 # Задание на дом добавить возможность для страницы диспетчера назначать заказы на себя и на свободных водителей
