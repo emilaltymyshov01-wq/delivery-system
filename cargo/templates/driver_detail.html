@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Информация о водителе</h2>
+
+    <div class="card p-3 mb-4">
+        <h4>{{ driver }}</h4>
+
+        <p><strong>ID:</strong> {{ driver.id }}</p>
+        <p><strong>Имя:</strong> {{ driver.name_driver }}</p>
+    </div>
+
+    <h3>Заказы водителя</h3>
+
+    {% if orders %}
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID заказа</th>
+                    <th>Информация</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                    <tr>
+                        <td>{{ order.id }}</td>
+                        <td>{{ order.name_order }}</td>
+                        <td>
+                            <form method="POST" action="{% url 'complete_order' %}">
+                                    {% csrf_token %}
+                                <input type="hidden" name="order_id" value="{{ order.id }}">
+                                <button type="submit">Заказ доставлен</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>У этого водителя пока нет заказов.</p>
+    {% endif %}
+
+    <a href="{% url 'driver_list' %}" class="btn btn-secondary">
+        Назад к списку водителей
+    </a>
+</div>
+{% endblock %}

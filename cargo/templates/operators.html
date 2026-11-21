@@ -107,9 +107,10 @@
 
                 <select name="driver_id">
 
-                    <option value="">
-                        Назначить только на себя
-                    </option>
+                    {% if not drivers %}
+                      <option disabled="true">Свободных водителей нету</option>
+                    {% endif %}
+
 
                     {% for driver in drivers %}
 

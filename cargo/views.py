@@ -3,6 +3,10 @@ from django.utils import timezone
 from .models import Driver, Dispatcher, Client, Order
 
 
+def base(request):
+    return render(request, 'base.html')
+
+
 def driver_list(request):
     return render(request, 'driver_list.html', {'drivers': Driver.objects.all()})
 
@@ -14,7 +18,7 @@ def client_list(request):
 
 def order_list(request):
     return render(request, 'order_list.html', {
-        'orders': Order.objects.select_related('driver', 'dispatcher', 'client')
+        'orders': Order.objects.select_related('driver', 'dispatcher', 'client').filter(is_delivered = False)
     })
 
 
@@ -146,6 +150,20 @@ def operators_page(request):
         order.save()
 
         return redirect("operators_page")
+    
+    
+def complete_order(request):
+    if request.method == "POST":
+        order_id = request.POST.get('order_id') 
+        order = Order.objects.get(id = order_id)
+        order.is_delivered = True
+        order.save()
+        
+        driver = order.driver
+        
+        return render(request, "driver_detail.html", context= { 'driver': driver})
+        
+        
 
 
 
